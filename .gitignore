@@ -1,0 +1,4 @@
+src/*.mh
+src/*.err
+src/Mercury
+src/main_strategy_matrix
