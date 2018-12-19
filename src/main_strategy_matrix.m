@@ -60,15 +60,22 @@ main(!IO) :-
 	then
 		(	% switch
 			IResult = ok(Result),
-			GameParameters = gameParameters(Result),
 			(if
-				valid(GameParameters)
+				getopt.lookup_bool_option(Result, help) = yes
 			then
-				Filename = getopt.lookup_string_option(Result, filename),
-				createPayoffMatrix(Filename, GameParameters, !IO)
+				io.print(helpMessage, !IO)
 			else
-				io.print(io.stderr_stream, "Game parameters are invalid!\n", !IO),
-				io.set_exit_status(1, !IO)
+				GameParameters = gameParameters(Result),
+				(if
+					valid(GameParameters)
+				then
+					Filename = getopt.lookup_string_option(Result, filename),
+					createPayoffMatrix(Filename, GameParameters, !IO),
+					io.print("Done!\n", !IO)
+				else
+					io.print(io.stderr_stream, "Game parameters are invalid!\n", !IO),
+					io.set_exit_status(1, !IO)
+				)
 			)
 		;	
 			IResult = error(Message),
@@ -77,12 +84,26 @@ main(!IO) :-
 		)
 	else
 		io.format(io.stderr_stream, "Unrecognised options: %s\n", [s(string(RestArgs))], !IO)
-	),
-	io.print("Done!\n", !IO)
+	)
 	.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Implementation of private predicates and functions
+
+:- func helpMessage = string.
+
+helpMessage = "Create a CSV file with the payoff matrix of the Give-and-Take game.
+The matrix is for all the history 1 size strategies.
+Usage:
+  main_strategy_matrix [OPTIONS]
+Available options are:
+  --bg N    bonus for giving the resource, default is 0.5
+  --cpt N   cost for performing the take action, default is 0.5
+  --cst N   cost payed by the subject of the take action, default is 0.5
+  -n, --number-stages N  number of stages of the game, default is 1
+  -o, --output FILE       name of the file to write the payoff matrix, default is payoff-matrix.csv
+  -h, --help              print this help message, and exit
+".
 
 /**
  * Return the game parameters specified in the command line.
