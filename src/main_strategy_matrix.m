@@ -108,17 +108,16 @@ Available options are:
 /**
  * Return the game parameters specified in the command line.
  */
-:- func gameParameters(getopt.option_table(commandLineOptions)) = givetake.game.game.
+:- func gameParameters(getopt.option_table(commandLineOptions)) = givetake.parameters.parameters.
 
 gameParameters(Options) = Result :-
-	Parameters^bg = string.det_to_float(getopt.lookup_string_option(Options, bg)),
-	Parameters^cpt = string.det_to_float(getopt.lookup_string_option(Options, cpt)),
-	Parameters^cst = string.det_to_float(getopt.lookup_string_option(Options, cst)),
-	Result^parameters = Parameters,
+	Result^bg = string.det_to_float(getopt.lookup_string_option(Options, bg)),
+	Result^cpt = string.det_to_float(getopt.lookup_string_option(Options, cpt)),
+	Result^cst = string.det_to_float(getopt.lookup_string_option(Options, cst)),
 	Result^numberStages = getopt.lookup_int_option(Options, numberStages)
 	.
 
-:- pred createPayoffMatrix(string, givetake.game.game, io.state, io.state).
+:- pred createPayoffMatrix(string, givetake.parameters.parameters, io.state, io.state).
 :- mode createPayoffMatrix(in, in, di, uo) is cc_multi.
 
 createPayoffMatrix(Filename, GameParameters, !IO) :-
@@ -139,7 +138,7 @@ createPayoffMatrix(Filename, GameParameters, !IO) :-
 	)
 	.
 
-:- pred payoffMatrixEntry(givetake.game.game, row).
+:- pred payoffMatrixEntry(givetake.parameters.parameters, row).
 :- mode payoffMatrixEntry(in, out(row)) is nondet.
 
 payoffMatrixEntry(GameParameters, Row) :-

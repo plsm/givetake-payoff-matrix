@@ -8,7 +8,7 @@
  *
  * 3) the cost the subject of the take action has to pay;
  *
- * 4) the number of iterations of the game.
+ * 4) the number of iterations/stages of the game.
 
  * @author Pedro Mariano
  * @version 1.0 2018/12/14
@@ -19,9 +19,10 @@
 
 :- type parameters --->
 	parameters(
-		bg::float,
-		cpt::float,
-		cst::float
+		bg  :: float ,
+		cpt :: float ,
+		cst :: float ,
+		numberStages :: int
 	).
 
 /**
@@ -47,7 +48,9 @@ valid(Parameters) :-
 	Parameters^bg < 1.0,
 	Parameters^bg >= 0.0,
 	Parameters^cpt > 0.0,
-	Parameters^cst >= 0.0.
+	Parameters^cst >= 0.0,
+	Parameters^numberStages > 1
+	.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Implementation of private predicates and functions

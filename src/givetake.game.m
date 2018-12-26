@@ -11,15 +11,6 @@
 :- import_module givetake.action, givetake.parameters, givetake.strategy.
 :- import_module io, list.
 
-:- type game --->
-	game(
-		parameters   :: givetake.parameters.parameters,
-		numberStages :: int
-	).
-
-:- pred valid(game).
-:- mode valid(in) is semidet.
-
 /**
  * play(Game, StrategyFst, StrategySnd, PayoffFst, PayoffSnd)
 
@@ -28,7 +19,7 @@
  * <p> Computes the exact payoff for deterministic strategies. For
  * stochastic strategies the average payoff is returned.
  */
-:- pred playAvg(game, givetake.strategy.strategy, givetake.strategy.strategy, float, float, list(actions)).
+:- pred playAvg(givetake.parameters.parameters, givetake.strategy.strategy, givetake.strategy.strategy, float, float, list(actions)).
 :- mode playAvg(in, in, in, out, out, out) is det.
 
 %:- pred playMemoTableReset(io, io).
@@ -51,15 +42,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Implementation of exported predicates and functions
 
-valid(Game) :-
-	Game^numberStages > 1,
-	valid(Game^parameters)
-	.
-
-playAvg(Game, StrategyFst, StrategySnd, PayoffFst, PayoffSnd, ActionSequence) :-
-	Game = game(Parameters, Time),
+playAvg(Parameters, StrategyFst, StrategySnd, PayoffFst, PayoffSnd, ActionSequence) :-
 	playDebugMemo(
-		Parameters, Time,
+		Parameters, Parameters^numberStages,
 		StrategyFst, StrategySnd, fst,
 		PayoffFst, PayoffSnd, ActionSequence
 	).
